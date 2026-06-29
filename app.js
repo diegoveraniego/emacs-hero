@@ -719,7 +719,7 @@ function renderSidebar(){
     const cls=['sb-item',active?'active':'',done?'done':'',locked?'locked':''].filter(Boolean).join(' ');
     const chk=locked?'🔒':(done?'✓':String(i+1).padStart(2,'0'));
     const badges=L.keys?L.keys.slice(0,3).map(k=>`<span class="badge" style="font-size:0.65rem;padding:0 4px">${k}</span>`).join(''):'';
-    out+=`<div class="${cls}" data-i="${i}" role="button" tabindex="${locked?-1:0}"><div class="sb-i">${chk}</div><div class="sb-t" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${L.title}</div><div class="sb-ks">${badges}</div></div>`;
+    out+=`<div class="${cls}" data-i="${i}" role="button" tabindex="${locked?-1:0}"><div class="sb-i">${chk}</div><div class="sb-t" style="min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${L.title}</div><div class="sb-ks">${badges}</div></div>`;
   });
   sb.innerHTML=out;
   sb.querySelectorAll('.sb-item:not(.locked)').forEach(el=>{

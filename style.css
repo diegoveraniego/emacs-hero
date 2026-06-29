@@ -110,8 +110,9 @@ kbd {
 .badges { display: flex; gap: 10px; }
 .badge {
   background: var(--bg); border: 1px solid var(--purple);
-  color: var(--purple); padding: 2px 8px; border-radius: 12px;
+  color: var(--purple); padding: 2px 8px; border-radius: 4px;
   font-size: 0.8rem; font-family: var(--font-mono);
+  white-space: nowrap; flex-shrink: 0;
 }
 
 /* LAYOUT */
@@ -138,7 +139,7 @@ kbd {
   font-size: 0.7rem; border: 1px solid var(--border);
 }
 .sb-item.done .sb-i { background: var(--green); border-color: var(--green); color: var(--bg); font-weight: bold; }
-.sb-ks { margin-left: auto; display: flex; gap: 4px; }
+.sb-ks { margin-left: auto; display: flex; gap: 4px; flex-shrink: 0; }
 
 /* MAIN CONTENT */
 main {
