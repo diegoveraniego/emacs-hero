@@ -6,6 +6,7 @@ const A = {
   done: new Set(),
   tab: 'practice',
   stats: {},
+  lang: 'es', // default to Spanish based on context
 };
 
 // ── Buffer state ─────────────────────────────────────────────
@@ -636,8 +637,8 @@ const MODES={org:'Org',elisp:'Emacs-Lisp',journal:'Org',c:'C',bugs:'Fundamental'
 function loadLesson(idx){
   A.lesson=idx;
   if(!A.stats[idx])A.stats[idx]={attempts:0,correct:0,errors:0,startTime:Date.now()};
-  const L=LESSONS[idx];
-  B.lines=[...BUFS[L.buf]];
+  const L=LESSONS[A.lang][idx];
+  B.lines=[...BUFS[A.lang][L.buf]];
   B.cursor={l:0,c:0};B.mark=null;B.markOn=false;B.prefix=null;
   B.isSrch=false;B.srchQ='';B.srchMatches=[];B.isMx=false;B.mxQ='';
   B.isQr=false;B.isLink=false;B.rcState=0;B.scrollTop=0;B.cmdCnt={};
@@ -1014,9 +1015,40 @@ function save(){
 function load(){
   try{
     const s=JSON.parse(localStorage.getItem('emacs-hero')||'null');
-    if(s){A.ctrlKey=s.ctrlKey||'Escape';A.ctrlLabel=s.ctrlLabel||'Esc';A.lesson=s.lesson||0;A.done=new Set(s.done||[]);return true;}
+    if(s){
+      A.ctrlKey=s.ctrlKey||'Escape';A.ctrlLabel=s.ctrlLabel||'Esc';
+      A.lesson=s.lesson||0;A.done=new Set(s.done||[]);
+      A.lang=s.lang||'es';
+      return true;
+    }
   }catch(e){}
   return false;
+}
+
+function save(){
+  localStorage.setItem('emacs-hero',JSON.stringify({...A,done:[...A.done]}));
+}
+
+// ── i18n ──────────────────────────────────────────────────────
+function setLang(lang){
+  A.lang=lang;
+  save();
+  document.querySelectorAll('[data-lang]').forEach(b=>b.classList.toggle('active',b.dataset.lang===lang));
+  
+  const dict = I18N[lang];
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.dataset.i18n;
+    if(dict[key]) el.innerHTML = dict[key];
+  });
+  document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+    const key = el.dataset.i18nPlaceholder;
+    if(dict[key]) el.placeholder = dict[key];
+  });
+  
+  document.title = dict.title;
+  if(A.lesson !== null && document.getElementById('l-title').textContent !== '') {
+    loadLesson(A.lesson); // Re-render current lesson text
+  }
 }
 
 // ── Onboarding ────────────────────────────────────────────────
@@ -1079,15 +1111,42 @@ let modalOpen=true;
 function init(){
   const hasSaved=load();
   const overlay=document.getElementById('modal-overlay');
+  const landing=document.getElementById('landing');
+  
+  setLang(A.lang);
+
   if(hasSaved){
-    overlay.style.display='none';
-    modalOpen=false;
-    document.getElementById('ctrl-badge').textContent=`${A.ctrlLabel}=Ctrl`;
-    loadLesson(A.lesson);
-  } else {
-    overlay.style.display='flex';
-    modalOpen=true;
+    document.getElementById('btn-learn').textContent = I18N[A.lang].btn_continue;
   }
+  
+  // Show landing by default
+  landing.style.display='flex';
+  
+  document.getElementById('btn-learn').addEventListener('click',()=>{
+    landing.style.display='none';
+    if(hasSaved){
+      document.getElementById('ctrl-badge').textContent=`${A.ctrlLabel}=Ctrl`;
+      loadLesson(A.lesson);
+      overlay.style.display='none';
+      modalOpen=false;
+    } else {
+      overlay.style.display='flex';
+      modalOpen=true;
+    }
+  });
+
+  const whyModal = document.getElementById('why-modal');
+  document.getElementById('btn-why').addEventListener('click',()=>{
+    whyModal.style.display='flex';
+  });
+  document.getElementById('why-close').addEventListener('click',()=>{
+    whyModal.style.display='none';
+  });
+
+  document.querySelectorAll('.lang-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => setLang(e.target.dataset.lang));
+  });
+
   initModal();
   // Example toggle
   document.getElementById('ex-toggle').addEventListener('click',()=>{
@@ -1113,91 +1172,84 @@ function init(){
 
 let csRendered=false;
 function renderCheatsheet(){
-  if(csRendered) return;
+  const dict = I18N[A.lang];
   const cp=document.getElementById('cheatsheet-pnl');
   cp.innerHTML=`
     <div style="margin-bottom:20px;font-size:12px;color:var(--fg-dim);line-height:1.6">
-      <strong>Flujo de escritura en Emacs:</strong> No uses la tecla Esc repetidamente. Usa la zona de control para moverte, borrar y corregir mientras te mantienes en el flujo (insert mode).
+      ${dict.cs_intro}
     </div>
 
     <!-- GENERAL -->
-    <h3 style="color:var(--blue);font-size:13px;margin-bottom:10px;text-transform:uppercase;letter-spacing:.05em;border-bottom:1px solid var(--border);padding-bottom:4px">⌨ General</h3>
+    <h3 style="color:var(--blue);font-size:13px;margin-bottom:10px;text-transform:uppercase;letter-spacing:.05em;border-bottom:1px solid var(--border);padding-bottom:4px">${dict.cs_gen}</h3>
     <div class="cs-grid">
       <div class="cs-card">
-        <div class="cs-header"><div class="cs-dot" style="background:var(--blue)"></div><span class="cs-title" style="color:var(--blue)">Movimiento Esencial</span></div>
+        <div class="cs-header"><div class="cs-dot" style="background:var(--blue)"></div><span class="cs-title" style="color:var(--blue)">${dict.cs_gen_1}</span></div>
         <div class="cs-body">
-          <div class="cs-row"><div class="cs-keys"><kbd class="blue">C-f</kbd> / <kbd class="blue">C-b</kbd></div><div class="cs-desc">Caracter adelante / atrás</div></div>
-          <div class="cs-row"><div class="cs-keys"><kbd class="blue">C-n</kbd> / <kbd class="blue">C-p</kbd></div><div class="cs-desc">Línea siguiente / anterior</div></div>
-          <div class="cs-row"><div class="cs-keys"><kbd class="blue">M-f</kbd> / <kbd class="blue">M-b</kbd></div><div class="cs-desc">Palabra adelante / atrás</div></div>
-          <div class="cs-row"><div class="cs-keys"><kbd class="blue">C-a</kbd> / <kbd class="blue">C-e</kbd></div><div class="cs-desc">Inicio / fin de línea</div></div>
-          <div class="cs-row"><div class="cs-keys"><kbd class="blue">M-&lt;</kbd> / <kbd class="blue">M-&gt;</kbd></div><div class="cs-desc">Inicio / fin de buffer</div></div>
+          <div class="cs-row"><div class="cs-keys"><kbd class="blue">C-f</kbd> / <kbd class="blue">C-b</kbd></div><div class="cs-desc">${dict.desc.char_fwd_bwd}</div></div>
+          <div class="cs-row"><div class="cs-keys"><kbd class="blue">C-n</kbd> / <kbd class="blue">C-p</kbd></div><div class="cs-desc">${dict.desc.line_nxt_prv}</div></div>
+          <div class="cs-row"><div class="cs-keys"><kbd class="blue">M-f</kbd> / <kbd class="blue">M-b</kbd></div><div class="cs-desc">${dict.desc.word_fwd_bwd}</div></div>
+          <div class="cs-row"><div class="cs-keys"><kbd class="blue">C-a</kbd> / <kbd class="blue">C-e</kbd></div><div class="cs-desc">${dict.desc.line_beg_end}</div></div>
+          <div class="cs-row"><div class="cs-keys"><kbd class="blue">M-&lt;</kbd> / <kbd class="blue">M-&gt;</kbd></div><div class="cs-desc">${dict.desc.buf_beg_end}</div></div>
         </div>
       </div>
       <div class="cs-card">
-        <div class="cs-header"><div class="cs-dot" style="background:var(--yellow)"></div><span class="cs-title" style="color:var(--yellow)">Kill Ring (Cortar/Pegar)</span></div>
+        <div class="cs-header"><div class="cs-dot" style="background:var(--yellow)"></div><span class="cs-title" style="color:var(--yellow)">${dict.cs_gen_2}</span></div>
         <div class="cs-body">
-          <div class="cs-row"><div class="cs-keys"><kbd class="yellow">C-SPC</kbd></div><div class="cs-desc">Activar mark (seleccionar)</div></div>
-          <div class="cs-row"><div class="cs-keys"><kbd class="yellow">M-w</kbd> / <kbd class="yellow">C-w</kbd></div><div class="cs-desc">Copiar / Cortar región</div></div>
-          <div class="cs-row"><div class="cs-keys"><kbd class="yellow">C-y</kbd></div><div class="cs-desc">Pegar (yank)</div></div>
-          <div class="cs-row"><div class="cs-keys"><kbd class="yellow">M-y</kbd></div><div class="cs-desc">Rotar kill ring (tras C-y)</div></div>
-          <div class="cs-row"><div class="cs-keys"><kbd class="magenta">C-/</kbd></div><div class="cs-desc">Undo</div></div>
+          <div class="cs-row"><div class="cs-keys"><kbd class="yellow">C-SPC</kbd></div><div class="cs-desc">${dict.desc.mark_act}</div></div>
+          <div class="cs-row"><div class="cs-keys"><kbd class="yellow">M-w</kbd> / <kbd class="yellow">C-w</kbd></div><div class="cs-desc">${dict.desc.copy_cut}</div></div>
+          <div class="cs-row"><div class="cs-keys"><kbd class="yellow">C-y</kbd></div><div class="cs-desc">${dict.desc.yank}</div></div>
+          <div class="cs-row"><div class="cs-keys"><kbd class="yellow">M-y</kbd></div><div class="cs-desc">${dict.desc.yank_pop}</div></div>
+          <div class="cs-row"><div class="cs-keys"><kbd class="magenta">C-/</kbd></div><div class="cs-desc">${dict.desc.undo}</div></div>
         </div>
       </div>
     </div>
 
     <!-- PROSA / ESSAY -->
-    <h3 style="color:var(--cyan);font-size:13px;margin-top:24px;margin-bottom:10px;text-transform:uppercase;letter-spacing:.05em;border-bottom:1px solid var(--border);padding-bottom:4px">📝 Prosa & Ensayo</h3>
+    <h3 style="color:var(--cyan);font-size:13px;margin-top:24px;margin-bottom:10px;text-transform:uppercase;letter-spacing:.05em;border-bottom:1px solid var(--border);padding-bottom:4px">${dict.cs_prose}</h3>
     <div class="cs-grid">
       <div class="cs-card">
-        <div class="cs-header"><div class="cs-dot" style="background:var(--red)"></div><span class="cs-title" style="color:var(--red)">Corrección rápida</span></div>
+        <div class="cs-header"><div class="cs-dot" style="background:var(--red)"></div><span class="cs-title" style="color:var(--red)">${dict.cs_prose_1}</span></div>
         <div class="cs-body">
-          <div class="cs-row"><div class="cs-keys"><kbd class="red">C-d</kbd></div><div class="cs-desc">Borrar caracter adelante</div></div>
-          <div class="cs-row"><div class="cs-keys"><kbd class="red">M-DEL</kbd> / <kbd class="red">M-d</kbd></div><div class="cs-desc">Borrar palabra atrás / adelante</div></div>
-          <div class="cs-row"><div class="cs-keys"><kbd class="red">C-k</kbd></div><div class="cs-desc">Matar hasta el fin de la línea</div></div>
-          <div class="cs-row"><div class="cs-keys"><kbd class="red">M-k</kbd></div><div class="cs-desc">Matar hasta el fin de oración</div></div>
+          <div class="cs-row"><div class="cs-keys"><kbd class="red">C-d</kbd></div><div class="cs-desc">${dict.desc.del_char_fwd}</div></div>
+          <div class="cs-row"><div class="cs-keys"><kbd class="red">M-DEL</kbd> / <kbd class="red">M-d</kbd></div><div class="cs-desc">${dict.desc.del_word_bwd_fwd}</div></div>
+          <div class="cs-row"><div class="cs-keys"><kbd class="red">C-k</kbd></div><div class="cs-desc">${dict.desc.kill_line}</div></div>
+          <div class="cs-row"><div class="cs-keys"><kbd class="red">M-k</kbd></div><div class="cs-desc">${dict.desc.kill_sentence}</div></div>
         </div>
       </div>
       <div class="cs-card">
-        <div class="cs-header"><div class="cs-dot" style="background:var(--cyan)"></div><span class="cs-title" style="color:var(--cyan)">Edición fluida</span></div>
+        <div class="cs-header"><div class="cs-dot" style="background:var(--cyan)"></div><span class="cs-title" style="color:var(--cyan)">${dict.cs_prose_2}</span></div>
         <div class="cs-body">
-          <div class="cs-row"><div class="cs-keys"><kbd class="blue">M-q</kbd></div><div class="cs-desc">Refluir párrafo (fill-paragraph)</div></div>
-          <div class="cs-row"><div class="cs-keys"><kbd class="blue">C-t</kbd> / <kbd class="blue">M-t</kbd></div><div class="cs-desc">Transponer letras / palabras</div></div>
-          <div class="cs-row"><div class="cs-keys"><kbd class="blue">M-u</kbd> / <kbd class="blue">M-l</kbd></div><div class="cs-desc">Palabra a MAYÚSCULAS / minúsculas</div></div>
-          <div class="cs-row"><div class="cs-keys"><kbd class="blue">M-c</kbd></div><div class="cs-desc">Capitalizar palabra</div></div>
+          <div class="cs-row"><div class="cs-keys"><kbd class="cyan">M-q</kbd></div><div class="cs-desc">${dict.desc.fill_para}</div></div>
+          <div class="cs-row"><div class="cs-keys"><kbd class="cyan">C-t</kbd> / <kbd class="cyan">M-t</kbd></div><div class="cs-desc">${dict.desc.trans_char_word}</div></div>
+          <div class="cs-row"><div class="cs-keys"><kbd class="cyan">M-u</kbd> / <kbd class="cyan">M-l</kbd></div><div class="cs-desc">${dict.desc.upcase_downcase}</div></div>
+          <div class="cs-row"><div class="cs-keys"><kbd class="cyan">M-c</kbd></div><div class="cs-desc">${dict.desc.capitalize}</div></div>
         </div>
       </div>
     </div>
 
     <!-- ORG-MODE / POETRY -->
-    <h3 style="color:var(--magenta);font-size:13px;margin-top:24px;margin-bottom:10px;text-transform:uppercase;letter-spacing:.05em;border-bottom:1px solid var(--border);padding-bottom:4px">🦄 Org-mode & Poesía</h3>
+    <h3 style="color:var(--purple);font-size:13px;margin-top:24px;margin-bottom:10px;text-transform:uppercase;letter-spacing:.05em;border-bottom:1px solid var(--border);padding-bottom:4px">${dict.cs_org}</h3>
     <div class="cs-grid">
       <div class="cs-card">
-        <div class="cs-header"><div class="cs-dot" style="background:var(--magenta)"></div><span class="cs-title" style="color:var(--magenta)">Estructura & Tareas</span></div>
+        <div class="cs-header"><div class="cs-dot" style="background:var(--purple)"></div><span class="cs-title" style="color:var(--purple)">${dict.cs_org_1}</span></div>
         <div class="cs-body">
-          <div class="cs-row"><div class="cs-keys"><kbd class="magenta">TAB</kbd></div><div class="cs-desc">Colapsar / expandir heading</div></div>
-          <div class="cs-row"><div class="cs-keys"><kbd class="magenta">M-RET</kbd></div><div class="cs-desc">Nuevo heading al mismo nivel</div></div>
-          <div class="cs-row"><div class="cs-keys"><kbd class="magenta">C-c C-t</kbd></div><div class="cs-desc">Ciclar estado TODO</div></div>
-          <div class="cs-row"><div class="cs-keys"><kbd class="magenta">C-c .</kbd></div><div class="cs-desc">Insertar timestamp activo</div></div>
+          <div class="cs-row"><div class="cs-keys"><kbd class="purple">TAB</kbd></div><div class="cs-desc">${dict.desc.org_cycle}</div></div>
+          <div class="cs-row"><div class="cs-keys"><kbd class="purple">M-RET</kbd></div><div class="cs-desc">${dict.desc.org_new_heading}</div></div>
+          <div class="cs-row"><div class="cs-keys"><kbd class="purple">C-c C-t</kbd></div><div class="cs-desc">${dict.desc.org_todo}</div></div>
+          <div class="cs-row"><div class="cs-keys"><kbd class="purple">C-c .</kbd></div><div class="cs-desc">${dict.desc.org_timestamp}</div></div>
         </div>
       </div>
       <div class="cs-card">
-        <div class="cs-header"><div class="cs-dot" style="background:var(--green)"></div><span class="cs-title" style="color:var(--green)">Poesía (Versos y estrofas)</span></div>
+        <div class="cs-header"><div class="cs-dot" style="background:var(--green)"></div><span class="cs-title" style="color:var(--green)">${dict.cs_org_2}</span></div>
         <div class="cs-body">
-          <div class="cs-row"><div class="cs-keys"><kbd class="blue">C-o</kbd></div><div class="cs-desc">Abrir línea vacía debajo</div></div>
-          <div class="cs-row"><div class="cs-keys"><kbd class="blue">C-a</kbd> <kbd class="blue">TAB</kbd></div><div class="cs-desc">Indentar verso actual</div></div>
-          <div class="cs-row"><div class="cs-keys"><kbd class="magenta">M-↑</kbd> / <kbd class="magenta">M-↓</kbd></div><div class="cs-desc">Mover verso/estrofa arriba/abajo</div></div>
+          <div class="cs-row"><div class="cs-keys"><kbd class="green">C-o</kbd></div><div class="cs-desc">${dict.desc.poetry_open_line}</div></div>
+          <div class="cs-row"><div class="cs-keys"><kbd class="green">C-a TAB</kbd></div><div class="cs-desc">${dict.desc.poetry_indent}</div></div>
+          <div class="cs-row"><div class="cs-keys"><kbd class="green">M-↑</kbd> / <kbd class="green">M-↓</kbd></div><div class="cs-desc">${dict.desc.poetry_move}</div></div>
         </div>
       </div>
     </div>
 
     <!-- CODING -->
-    <h3 style="color:var(--orange);font-size:13px;margin-top:24px;margin-bottom:10px;text-transform:uppercase;letter-spacing:.05em;border-bottom:1px solid var(--border);padding-bottom:4px">💻 Coding & Comandos</h3>
-    <div class="cs-grid">
-      <div class="cs-card">
-        <div class="cs-header"><div class="cs-dot" style="background:var(--orange)"></div><span class="cs-title" style="color:var(--orange)">Búsqueda y Reemplazo</span></div>
-        <div class="cs-body">
-          <div class="cs-row"><div class="cs-keys"><kbd class="orange">C-s</kbd> / <kbd class="orange">C-r</kbd></div><div class="cs-desc">Isearch (buscar) adelante / atrás</div></div>
-          <div class="cs-row"><div class="cs-keys"><kbd class="orange">C-s C-s</kbd></div><div class="cs-desc">Repetir última búsqueda</div></div>
           <div class="cs-row"><div class="cs-keys"><kbd class="orange">M-%</kbd></div><div class="cs-desc">Query replace (reemplazar confirmando)</div></div>
         </div>
       </div>
