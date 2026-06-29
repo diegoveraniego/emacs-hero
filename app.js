@@ -370,7 +370,7 @@ function srchNext(){
 // ── Execute command ──────────────────────────────────────────
 function exec(cmd){
   const L=LESSONS[A.lang][A.lesson];
-  const req=L.req.includes(cmd);
+  const req=(L.req||[]).includes(cmd);
   const st=A.stats[A.lesson];
   if(st)st.attempts=(st.attempts||0)+1;
 
@@ -607,8 +607,9 @@ function trackCmd(cmd){
 
 function updateProgress(){
   const L=LESSONS[A.lang][A.lesson];
-  if(L.auto||L.need===0){document.getElementById('pfill').style.width='100%';document.getElementById('plabel').textContent='✓ completado';return;}
-  let cnt=0;for(const c of L.req)cnt+=B.cmdCnt[c]||0;
+  const reqList=L.req||[];
+  if(L.auto||reqList.length===0){document.getElementById('pfill').style.width='100%';document.getElementById('plabel').textContent='✓ completado';return;}
+  let cnt=0;for(const c of reqList)cnt+=B.cmdCnt[c]||0;
   const pct=Math.min(cnt/L.need,1)*100;
   document.getElementById('pfill').style.width=pct+'%';
   document.getElementById('plabel').textContent=`${Math.min(cnt,L.need)} / ${L.need} acciones`;
@@ -620,7 +621,7 @@ function checkCompletion(){
     if(L.validate(B))completeSelf(A.lesson);
     return;
   }
-  let cnt=0;for(const c of L.req)cnt+=B.cmdCnt[c]||0;
+  let cnt=0;for(const c of (L.req||[]))cnt+=B.cmdCnt[c]||0;
   if(cnt>=L.need)completeSelf(A.lesson);
 }
 
@@ -746,7 +747,7 @@ function renderStats(){
   const L=LESSONS[A.lang][A.lesson];
   const elapsed=Math.round((Date.now()-(st.startTime||Date.now()))/1000);
   let rows='';
-  for(const c of L.req)rows+=`<div class="strow"><span class="stlbl">${c}</span><span class="stval">${B.cmdCnt[c]||0} usos</span></div>`;
+  for(const c of (L.req||[]))rows+=`<div class="strow"><span class="stlbl">${c}</span><span class="stval">${B.cmdCnt[c]||0} usos</span></div>`;
   pnl.innerHTML=`<div class="strow"><span class="stlbl">Intentos</span><span class="stval">${st.correct||0}</span></div>
 <div class="strow"><span class="stlbl">Errores</span><span class="stval" style="color:var(--red)">${st.errors||0}</span></div>
 <div class="strow"><span class="stlbl">Tiempo</span><span class="stval">${elapsed}s</span></div>${rows}`;

@@ -320,7 +320,7 @@ const LESSONS = {
   <p>Flujo típico: <code>M-&lt;</code> para ir al inicio y revisar → luego <code>C-u C-SPC</code> para volver. No necesitas recordar el número de línea.</p>`,
       ex:{b:'Línea 5 del buffer\n(cursor en medio)',a:'M-< → Línea 1 del buffer\n(mark ring guardó L5)\nC-u C-SPC → vuelve a L5'}
     },
-    { cat:'Basic Emacs', title:'Bug Survival', keys:['C-n','C-p','C-f','C-b'], buf:'bugs', hasBugs:true,
+    { cat:'Basic Emacs', title:'Bug Survival', keys:['C-n','C-p','C-f','C-b'], req:['C-n','C-p','C-f','C-b'], buf:'bugs', hasBugs:true,
       validate: (B) => B.lines[B.cursor.l].includes('[EXIT]') && B.cursor.c >= B.lines[B.cursor.l].indexOf('E'),
       theory:`<p><strong>NIVEL DE PRUEBA:</strong> ¡Los bugs se acercan! Demuestra tu dominio de los comandos de movimiento básicos (<code>C-n</code>, <code>C-p</code>, <code>C-f</code>, <code>C-b</code>) evadiendo los 🐛 y llegando a la salida <code>[EXIT]</code> en la parte inferior del buffer.</p>
   <p>Recuerda mantener la calma y no quitar los dedos de la fila central. Si te alcanzan, el nivel se reinicia.</p>`,
@@ -452,7 +452,7 @@ const LESSONS = {
   <p>Typical flow: <code>M-&lt;</code> to go to the start and check → then <code>C-u C-SPC</code> to return. You don't need to remember the line number.</p>`,
       ex:{b:'Line 5 of the buffer\n(cursor in middle)',a:'M-< → Line 1 of the buffer\n(mark ring saved L5)\nC-u C-SPC → returns to L5'}
     },
-    { cat:'Basic Emacs', title:'Bug Survival', keys:['C-n','C-p','C-f','C-b'], buf:'bugs', hasBugs:true,
+    { cat:'Basic Emacs', title:'Bug Survival', keys:['C-n','C-p','C-f','C-b'], req:['C-n','C-p','C-f','C-b'], buf:'bugs', hasBugs:true,
       validate: (B) => B.lines[B.cursor.l].includes('[EXIT]') && B.cursor.c >= B.lines[B.cursor.l].indexOf('E'),
       theory:`<p><strong>TRIAL LEVEL:</strong> The bugs are approaching! Prove your mastery of basic movement commands (<code>C-n</code>, <code>C-p</code>, <code>C-f</code>, <code>C-b</code>) by evading the 🐛 and reaching the exit <code>[EXIT]</code> at the bottom of the buffer.</p>
   <p>Remember to stay calm and don't take your fingers off the home row. If they catch you, the level restarts.</p>`,
