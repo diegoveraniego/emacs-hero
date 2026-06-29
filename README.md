@@ -1,46 +1,50 @@
 # Emacs Hero ⌨️🦸
 
-**Emacs Hero** es una aplicación web interactiva de un solo archivo (`index.html`) diseñada para enseñar y entrenar la memoria muscular de los atajos de teclado nativos de Emacs. Inspirado en plataformas interactivas, su objetivo es ayudarte a dominar el movimiento y edición de texto sin depender constantemente de la tecla `Esc` o del ratón, enfocándose especialmente en los flujos de trabajo de prosa, Org-mode y código.
+*[🇪🇸 Leer en Español](README.es.md)*
 
-> **Nota:** Perfecto para usuarios de Doom Emacs (u otros frameworks basados en Evil) que deseen escribir texto de manera fluida y ergonómica aprovechando los "native bindings" en el *insert mode*.
+**Emacs Hero** is an interactive, single-file (`index.html`) web application designed to teach and train muscle memory for native Emacs keybindings. Inspired by interactive platforms like VimHero, its goal is to help you master text navigation and editing without constantly relying on the `Esc` key or the mouse, focusing specifically on prose, Org-mode, and coding workflows.
 
-## 🚀 Características
+> **Note:** Perfect for Doom Emacs users (or other Evil-based frameworks) who want to write text fluidly and ergonomically by taking advantage of the "native bindings" while in *insert mode*.
 
-- **Lecciones Interactivas**: Aprende practicando. El simulador detecta tus pulsaciones de teclado en tiempo real y evalúa tu progreso.
-- **Validación por Objetivos**: No se trata solo de presionar teclas; tienes que modificar el buffer para cumplir metas específicas (como cambiar un estado a `DONE` en Org-mode).
-- **Minijuegos ("Bug Survival")**: Niveles especiales donde deberás evadir bugs (🐛) usando los atajos de movimiento básicos para sobrevivir.
-- **Cheatsheet Integrado**: Una sección de referencia rápida organizada por intención: General, Prosa/Ensayo, Org-mode/Poesía y Coding.
-- **Totalmente Personalizable**: Puedes configurar tu tecla simulada de `Ctrl` o `Meta` directamente desde la interfaz.
-- **Easter Eggs**: ¡Descubre secretos ocultos con `M-x`! (Pista: 🧩).
+## 🚀 Features
 
-## 🛠️ Instalación y Uso
+- **Interactive Lessons**: Learn by doing. The simulator detects your keystrokes in real-time and evaluates your progress.
+- **Goal-based Validation**: It's not just about pressing keys; you must modify the buffer to meet specific goals (like changing a state to `DONE` in Org-mode).
+- **Minigames ("Bug Survival")**: Special levels where you must evade bugs (🐛) using basic movement shortcuts to survive.
+- **Built-in Cheatsheet**: A quick reference section organized by intent: General, Prose/Essay, Org-mode/Poetry, and Coding.
+- **Fully Customizable**: You can configure your simulated `Ctrl` or `Meta` key directly from the interface.
+- **Easter Eggs**: Discover hidden secrets with `M-x`! (Hint: 🧩).
 
-¡Cero dependencias! No necesitas instalar Node, Python ni nada por el estilo.
+## 🛠️ Installation & Usage
 
-1. Clona este repositorio:
+Zero dependencies! No need to install Node, Python, or anything similar.
+
+1. Clone this repository:
    ```bash
    git clone https://github.com/diegoveraniego/emacs-hero.git
    ```
-2. Abre el archivo `index.html` en cualquier navegador web moderno.
-3. ¡Empieza a practicar!
+2. Open the `index.html` file in any modern web browser.
+3. Start practicing!
 
-Alternativamente, puedes alojarlo instantáneamente y gratis a través de **GitHub Pages**.
+Alternatively, you can host it instantly and for free via **GitHub Pages**.
 
-## 🏗️ Arquitectura
+## 🏗️ Architecture
 
-El proyecto es un ejercicio de minimalismo radical:
-- **`index.html`**: Contiene absolutamente todo (HTML semántico, CSS vainilla con paleta *Modus Vivendi* y la lógica de estado/renderizado en Vanilla JavaScript).
-- **Motor de Renderizado**: Un mini-emulador de buffer que dibuja cursores, resalta sintaxis (Org, C, Elisp) y maneja las superposiciones.
+The project is an exercise in radical minimalism:
+- **`index.html`**: Contains the semantic structure.
+- **`app.js` & `data.js`**: Vanilla JavaScript logic and localization.
+- **`style.css`**: Vanilla CSS with the *Modus Vivendi* palette.
+- **Rendering Engine**: A mini buffer emulator that draws cursors, highlights syntax (Org, C, Elisp), and handles overlays.
 
-## 🤝 Contribuir
+## 🤝 Contributing
 
-¡Las contribuciones son súper bienvenidas! Si quieres agregar nuevas lecciones:
-1. Busca la constante `LESSONS` dentro de la etiqueta `<script>`.
-2. Añade un nuevo objeto con el formato establecido (título, buffer, atajos requeridos, validación opcional, etc.).
-3. Haz un *pull request*.
+Contributions are super welcome! If you want to add new lessons:
+1. Look for the `LESSONS` constant inside `data.js`.
+2. Add a new object following the established format (title, buffer, required keys, optional validation, etc.).
+3. Submit a *pull request*.
 
-El código está estructurado para que una futura localización (traducción al inglés u otros idiomas) sea sencilla.
+The code is structured to support Internationalization (English/Spanish).
 
-## 📄 Licencia
+## 📄 License
 
-Este proyecto es de código abierto. ¡Úsalo, modifícalo y compártelo!
+This project is open-source. Use it, modify it, and share it!
