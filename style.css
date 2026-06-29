@@ -98,6 +98,12 @@ kbd {
   display: flex; justify-content: space-between; align-items: center;
   padding: 10px 20px; background: var(--bg-dim); border-bottom: 1px solid var(--border);
 }
+#hamburger {
+  background: transparent; border: none; color: var(--fg-main);
+  cursor: pointer; padding: 4px; display: flex; align-items: center; justify-content: center;
+  border-radius: 4px; transition: background 0.2s;
+}
+#hamburger:hover { background: var(--bg-hl); }
 .logo { display: flex; align-items: center; gap: 8px; font-family: var(--font-mono); font-weight: bold; font-size: 1.2rem; }
 .logo img { height: 26px; width: auto; }
 .logo span { color: var(--purple); }
@@ -203,18 +209,24 @@ main {
 .sm { background: rgba(244,71,71,0.3); } /* search match */
 .smc { background: var(--red); color: var(--bg); } /* search match current */
 
-.sy-comment { color: var(--green); font-style: italic; }
-.sy-keyword { color: var(--purple); font-weight: bold; }
-.sy-string { color: var(--orange); }
-.sy-func { color: var(--blue); }
-.sy-var { color: var(--cyan); }
-.sy-org1 { color: var(--purple); font-weight: bold; }
-.sy-org2 { color: var(--blue); font-weight: bold; }
-.sy-org3 { color: var(--cyan); font-weight: bold; }
-.sy-orgtodo { color: var(--red); font-weight: bold; }
-.sy-orgdone { color: var(--green); font-weight: bold; }
-.sy-orgts { color: var(--fg-dim); }
+.sy-purple { color: var(--purple); font-weight: bold; }
+.sy-purple2 { color: var(--purple); }
+.sy-dim { color: var(--fg-dim); }
+.sy-red { color: var(--red); font-weight: bold; }
+.sy-green { color: var(--green); font-weight: bold; }
+.sy-cyan { color: var(--cyan); }
+.sy-blue { color: var(--blue); }
+.sy-yellow { color: var(--yellow); }
+.sy-muted { color: var(--fg-dim); font-style: italic; }
 .sy-bug { color: var(--red); animation: shake 0.5s infinite; display: inline-block; }
+
+.bline { display: flex; }
+.lnum {
+  width: 40px; text-align: right; margin-right: 15px; padding-right: 10px;
+  color: var(--fg-dim); user-select: none; border-right: 1px solid var(--border);
+}
+.lcont { flex: 1; }
+
 @keyframes shake {
   0% { transform: translate(1px, 1px) rotate(0deg); }
   10% { transform: translate(-1px, -2px) rotate(-1deg); }
