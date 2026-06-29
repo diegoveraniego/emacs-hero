@@ -1,3 +1,5 @@
+<p align="center"><img src="logo.svg" alt="Emacs Hero" width="200"></p>
+
 # Emacs Hero ⌨️🦸
 
 *[🇪🇸 Leer en Español](README.es.md)*

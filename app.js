@@ -710,16 +710,16 @@ function renderSidebar(){
   const sb=document.getElementById('sidebar');
   let out='',lastCat='';
   LESSONS[A.lang].forEach((L,i)=>{
-    if(L.cat!==lastCat){if(lastCat)out+='<div style="height:6px"></div>';out+=`<div class="s-cat">${L.cat}</div>`;lastCat=L.cat;}
+    if(L.cat!==lastCat){if(lastCat)out+='<div style="height:6px"></div>';out+=`<div class="sb-cat">${L.cat}</div>`;lastCat=L.cat;}
     const active=i===A.lesson,done=A.done.has(i);
     const locked=i>0&&!A.done.has(i-1)&&!A.done.has(i)&&i!==A.lesson;
-    const cls=['s-lesson',active?'active':'',locked?'locked':''].filter(Boolean).join(' ');
-    const chk=done?'<span class="s-check">✓</span>':locked?'<span class="s-check" style="color:var(--fg-muted)">🔒</span>':'<span class="s-check"></span>';
-    const badges=L.keys.slice(0,3).map(k=>`<span class="kb">${k}</span>`).join('');
-    out+=`<div class="${cls}" data-i="${i}" role="button" tabindex="${locked?-1:0}">${chk}<span class="s-name">${String(i+1).padStart(2,'0')} ${L.title}</span><div class="s-badges">${badges}</div></div>`;
+    const cls=['sb-item',active?'active':'',done?'done':'',locked?'locked':''].filter(Boolean).join(' ');
+    const chk=locked?'🔒':(done?'✓':String(i+1).padStart(2,'0'));
+    const badges=L.keys?L.keys.slice(0,3).map(k=>`<span class="badge" style="font-size:0.65rem;padding:0 4px">${k}</span>`).join(''):'';
+    out+=`<div class="${cls}" data-i="${i}" role="button" tabindex="${locked?-1:0}"><div class="sb-i">${chk}</div><div class="sb-t" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${L.title}</div><div class="sb-ks">${badges}</div></div>`;
   });
   sb.innerHTML=out;
-  sb.querySelectorAll('.s-lesson:not(.locked)').forEach(el=>{
+  sb.querySelectorAll('.sb-item:not(.locked)').forEach(el=>{
     el.addEventListener('click',()=>{
       loadLesson(+el.dataset.i);
       document.getElementById('sidebar').classList.remove('open');
@@ -1090,16 +1090,16 @@ function switchTab(t){
   const ba=document.getElementById('buf-area');
   const sp=document.getElementById('stats-pnl');
   const cp=document.getElementById('cheatsheet-pnl');
-  ba.style.display='none'; sp.classList.remove('show'); cp.classList.remove('show');
+  ba.style.display='none'; sp.classList.remove('active'); cp.classList.remove('active');
   
   if(t==='practice'){
     ba.style.display='';
     ba.focus();
   } else if(t==='stats'){
-    sp.classList.add('show');
+    sp.classList.add('active');
     renderStats();
   } else if(t==='cheatsheet'){
-    cp.classList.add('show');
+    cp.classList.add('active');
     renderCheatsheet();
   }
 }
