@@ -262,7 +262,7 @@ function render(){
   const container=document.getElementById('buf-lines');
   const{lines,cursor,scrollTop,isSrch,srchMatches,srchIdx}=B;
   // Determine syntax mode from current lesson buffer
-  const L=LESSONS[A.lesson];
+  const L=LESSONS[A.lang][A.lesson];
   const bufMode=L?L.buf:'org';
   const sset={};
   if(isSrch) srchMatches.forEach((m,i)=>{
@@ -367,7 +367,7 @@ function srchNext(){
 
 // ── Execute command ──────────────────────────────────────────
 function exec(cmd){
-  const L=LESSONS[A.lesson];
+  const L=LESSONS[A.lang][A.lesson];
   const req=L.req.includes(cmd);
   const st=A.stats[A.lesson];
   if(st)st.attempts=(st.attempts||0)+1;
@@ -604,7 +604,7 @@ function trackCmd(cmd){
 }
 
 function updateProgress(){
-  const L=LESSONS[A.lesson];
+  const L=LESSONS[A.lang][A.lesson];
   if(L.auto||L.need===0){document.getElementById('pfill').style.width='100%';document.getElementById('plabel').textContent='✓ completado';return;}
   let cnt=0;for(const c of L.req)cnt+=B.cmdCnt[c]||0;
   const pct=Math.min(cnt/L.need,1)*100;
@@ -613,7 +613,7 @@ function updateProgress(){
 }
 
 function checkCompletion(){
-  const L=LESSONS[A.lesson];if(L.auto)return;
+  const L=LESSONS[A.lang][A.lesson];if(L.auto)return;
   if(typeof L.validate==='function'){
     if(L.validate(B))completeSelf(A.lesson);
     return;
@@ -626,7 +626,7 @@ function completeSelf(idx){
   if(A.done.has(idx))return;
   A.done.add(idx);save();renderSidebar();updateNext();
   const t=document.getElementById('toast');
-  document.getElementById('toast-msg').textContent=`"${LESSONS[idx].title}" completado 🎉`;
+  document.getElementById('toast-msg').textContent=`"${LESSONS[A.lang][idx].title}" completado 🎉`;
   t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3000);
 }
 
@@ -709,7 +709,7 @@ function startBugLevel(){
 function renderSidebar(){
   const sb=document.getElementById('sidebar');
   let out='',lastCat='';
-  LESSONS.forEach((L,i)=>{
+  LESSONS[A.lang].forEach((L,i)=>{
     if(L.cat!==lastCat){if(lastCat)out+='<div style="height:6px"></div>';out+=`<div class="s-cat">${L.cat}</div>`;lastCat=L.cat;}
     const active=i===A.lesson,done=A.done.has(i);
     const locked=i>0&&!A.done.has(i-1)&&!A.done.has(i)&&i!==A.lesson;
@@ -732,8 +732,8 @@ function renderSidebar(){
 function updateNext(){
   const btn=document.getElementById('next-btn');
   const ni=A.lesson+1;
-  if(ni>=LESSONS.length){btn.innerHTML='¡Completado! 🎉';btn.onclick=null;return;}
-  document.getElementById('next-name').textContent=LESSONS[ni].title;
+  if(ni>=LESSONS[A.lang].length){btn.innerHTML='¡Completado! 🎉';btn.onclick=null;return;}
+  document.getElementById('next-name').textContent=LESSONS[A.lang][ni].title;
   btn.onclick=()=>loadLesson(ni);
 }
 
@@ -741,7 +741,7 @@ function updateNext(){
 function renderStats(){
   const pnl=document.getElementById('stats-pnl');
   const st=A.stats[A.lesson];if(!st){pnl.innerHTML='';return;}
-  const L=LESSONS[A.lesson];
+  const L=LESSONS[A.lang][A.lesson];
   const elapsed=Math.round((Date.now()-(st.startTime||Date.now()))/1000);
   let rows='';
   for(const c of L.req)rows+=`<div class="strow"><span class="stlbl">${c}</span><span class="stval">${B.cmdCnt[c]||0} usos</span></div>`;
