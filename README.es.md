@@ -4,9 +4,12 @@
 
 *[🇬🇧 Read in English](README.md)*
 
-**Emacs Hero** es una aplicación web interactiva de un solo archivo (`index.html`) diseñada para enseñar y entrenar la memoria muscular de los atajos de teclado nativos de Emacs. Inspirado en plataformas interactivas, su objetivo es ayudarte a dominar el movimiento y edición de texto sin depender constantemente de la tecla `Esc` o del ratón, enfocándose especialmente en los flujos de trabajo de prosa, Org-mode y código.
+**Emacs Hero** es una aplicación web interactiva de un solo archivo (`index.html`) diseñada para enseñar y entrenar la memoria muscular de los atajos de teclado nativos de Emacs. Inspirada en plataformas interactivas como VimHero, su objetivo es ayudarte a dominar la navegación y edición de texto sin depender constantemente de la tecla `Esc` o el ratón, enfocándose específicamente en flujos de trabajo de texto, Org-mode y código.
 
-> **Nota:** Perfecto para usuarios de Doom Emacs (u otros frameworks basados en Evil) que deseen escribir texto de manera fluida y ergonómica aprovechando los "native bindings" en el *insert mode*.
+### Por qué creé esto
+El motivo de creación de este proyecto fue para yo mismo poder aprender a usar los atajos nativos de Emacs. Vengo de Vim y de Doom Emacs, pero tenía ganas de probar algo nuevo, y qué mejor manera de aprenderlo que construyendo esta herramienta. En el proceso, me di cuenta además que en Emacs hay muchas formas de aprender internamente (usando `M-x` o buscando el atajo que quieres hacer), pero esta app ofrece un camino guiado y divertido.
+
+> **Nota:** Perfecto para usuarios de Doom Emacs (u otros frameworks basados en Evil) que quieren escribir texto de forma fluida y ergonómica aprovechando los "atajos nativos" mientras están en el *modo insertar*.
 
 ## 🚀 Características
 

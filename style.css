@@ -242,7 +242,7 @@ main {
 }
 
 /* PANELS */
-.pnl { display: none; position: absolute; inset: 0; background: var(--bg); overflow-y: auto; padding: 20px; z-index: 10; }
+.pnl { display: none; flex: 1; background: var(--bg); overflow-y: auto; padding: 20px; z-index: 10; }
 .pnl.active { display: block; }
 #stats-pnl { font-family: var(--font-sans); }
 .st-card {

@@ -280,8 +280,9 @@ function render(){
       const isCur=isCL&&ci===cursor.c;
       if(ci===line.length){
         const isBugEol=(B.bugs||[]).find(b=>b.l===li&&b.c===ci);
-        if(isCur&&!isBugEol) lhtml+=`<span class="cursor-eol"></span>`;
+        if(isBugEol&&isCur) lhtml+=`<span class="cursor-eol">🐛</span>`;
         else if(isBugEol) lhtml+=`<span class="sy-bug">🐛</span>`;
+        else if(isCur) lhtml+=`<span class="cursor-eol"></span>`;
         else if(isCL&&cursor.c===line.length) lhtml+=`<span class="cursor-eol"></span>`;
         break;
       }
@@ -290,7 +291,8 @@ function render(){
       let cls='';
       let charToRender=ch;
       
-      if(isCur&&!isBug) cls='cursor-b';
+      if(isBug&&isCur){ cls='cursor-b'; charToRender='🐛'; }
+      else if(isCur) cls='cursor-b';
       else if(isBug){ cls='sy-bug'; charToRender='🐛'; }
       else {
         let inS=false,isC=false;
