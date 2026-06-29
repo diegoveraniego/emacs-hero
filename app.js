@@ -6,7 +6,7 @@ const A = {
   done: new Set(),
   tab: 'practice',
   stats: {},
-  lang: 'es', // default to Spanish based on context
+  lang: 'en', // default to English based on context
 };
 
 // ── Buffer state ─────────────────────────────────────────────
@@ -1018,7 +1018,7 @@ function load(){
     if(s){
       A.ctrlKey=s.ctrlKey||'Escape';A.ctrlLabel=s.ctrlLabel||'Esc';
       A.lesson=s.lesson||0;A.done=new Set(s.done||[]);
-      A.lang=s.lang||'es';
+      A.lang=s.lang||'en';
       return true;
     }
   }catch(e){}
