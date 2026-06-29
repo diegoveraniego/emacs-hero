@@ -226,6 +226,10 @@ main {
   position: absolute;
   left: 0;
   top: 0;
+  font-size: 0.65em; /* Emoji square ~0.65em to match mono character width */
+  line-height: 1.5; /* Align vertically with text */
+  text-align: center;
+  width: 100%;
   color: var(--red) !important;
   animation: shake 0.5s infinite;
   pointer-events: none;
