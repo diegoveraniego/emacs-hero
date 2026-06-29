@@ -1,0 +1,12 @@
+{
+  "name": "emacs-hero",
+  "version": "1.0.0",
+  "description": "Interactive Emacs native bindings tutorial",
+  "scripts": {
+    "dev": "bunx --bun vite",
+    "build": "bunx --bun vite build",
+    "serve": "bunx --bun vite preview"
+  },
+  "author": "Diego",
+  "license": "MIT"
+}
