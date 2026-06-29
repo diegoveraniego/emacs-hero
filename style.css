@@ -53,7 +53,9 @@ kbd {
 #landing-logo {
   font-family: var(--font-mono); font-size: 4rem; font-weight: bold;
   color: var(--fg-main); margin-bottom: 10px;
+  display: flex; flex-direction: column; align-items: center;
 }
+#landing-logo img { width: 140px; height: auto; margin-bottom: 10px; }
 #landing-logo span { color: var(--purple); }
 #landing-sub {
   color: var(--fg-dim); font-size: 1.2rem; margin-bottom: 40px;
@@ -96,7 +98,8 @@ kbd {
   display: flex; justify-content: space-between; align-items: center;
   padding: 10px 20px; background: var(--bg-dim); border-bottom: 1px solid var(--border);
 }
-.logo { font-family: var(--font-mono); font-weight: bold; font-size: 1.2rem; }
+.logo { display: flex; align-items: center; gap: 8px; font-family: var(--font-mono); font-weight: bold; font-size: 1.2rem; }
+.logo img { height: 26px; width: auto; }
 .logo span { color: var(--purple); }
 .badges { display: flex; gap: 10px; }
 .badge {
