@@ -280,8 +280,8 @@ function render(){
       const isCur=isCL&&ci===cursor.c;
       if(ci===line.length){
         const isBugEol=(B.bugs||[]).find(b=>b.l===li&&b.c===ci);
-        if(isBugEol&&isCur) lhtml+=`<span class="cursor-eol">🐛</span>`;
-        else if(isBugEol) lhtml+=`<span class="sy-bug">🐛</span>`;
+        if(isBugEol&&isCur) lhtml+=`<span class="cursor-eol has-bug"></span>`;
+        else if(isBugEol) lhtml+=`<span class="sy-bug has-bug" style="display:inline-block;width:9px">&nbsp;</span>`;
         else if(isCur) lhtml+=`<span class="cursor-eol"></span>`;
         else if(isCL&&cursor.c===line.length) lhtml+=`<span class="cursor-eol"></span>`;
         break;
@@ -291,9 +291,9 @@ function render(){
       let cls='';
       let charToRender=ch;
       
-      if(isBug&&isCur){ cls='cursor-b'; charToRender='🐛'; }
+      if(isBug&&isCur){ cls='cursor-b has-bug'; }
       else if(isCur) cls='cursor-b';
-      else if(isBug){ cls='sy-bug'; charToRender='🐛'; }
+      else if(isBug){ cls='sy-bug has-bug'; }
       else {
         let inS=false,isC=false;
         if(sset[li]) for(const m of sset[li]) if(ci>=m.c&&ci<m.c+m.len){inS=true;isC=m.cur;}
@@ -705,7 +705,7 @@ function startBugLevel(){
       mb('error','¡Un bug te alcanzó! Reiniciando nivel...');
       setTimeout(()=>loadLesson(A.lesson),1000);
     }
-  },400);
+  },800);
 }
 
 // ── Sidebar ───────────────────────────────────────────────────

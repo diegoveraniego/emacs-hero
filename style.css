@@ -219,7 +219,17 @@ main {
 .sy-blue { color: var(--blue); }
 .sy-yellow { color: var(--yellow); }
 .sy-muted { color: var(--fg-dim); font-style: italic; }
-.sy-bug { color: var(--red); animation: shake 0.5s infinite; display: inline-block; }
+.sy-bug { color: inherit; display: inline-block; }
+.has-bug { position: relative; }
+.has-bug::after {
+  content: '🐛';
+  position: absolute;
+  left: 0;
+  top: 0;
+  color: var(--red) !important;
+  animation: shake 0.5s infinite;
+  pointer-events: none;
+}
 
 .bline { display: flex; }
 .lnum {
