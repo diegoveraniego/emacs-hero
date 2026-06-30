@@ -6,10 +6,16 @@
 
 **Emacs Hero** is an interactive, single-file (`index.html`) web application designed to teach and train muscle memory for native Emacs keybindings. Inspired by interactive platforms like VimHero, its goal is to help you master text navigation and editing without constantly relying on the `Esc` key or the mouse, focusing specifically on prose, Org-mode, and coding workflows.
 
+<img width="1909" height="999" alt="image" src="https://github.com/user-attachments/assets/4eecce36-9b06-4d7e-8c8c-bc9e337ce1d1" />
+
+
 ### Why I built this
 I created Emacs Hero for myself, to learn native Emacs shortcuts. I come from Vim and Doom Emacs (Evil mode), but I wanted to try something new. What better way to learn than by building a tool for it! I also discovered that Emacs has many ways to learn internally using `M-x` to search for keybindings, but this web app offers a fun, gamified path.
 
 > **Note:** Perfect for Doom Emacs users (or other Evil-based frameworks) who want to write text fluidly and ergonomically by taking advantage of the "native bindings" while in *insert mode*.
+
+<img width="1909" height="999" alt="image" src="https://github.com/user-attachments/assets/0e3365b5-6b61-49ea-9942-3a87246bdd3c" />
+
 
 ## 🚀 Features
 
